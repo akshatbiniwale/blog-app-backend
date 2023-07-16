@@ -52,6 +52,10 @@ UserSchema.methods.generateJWT = async function () {
     // make it 1hr later
 };
 
+UserSchema.methods.comparePassword = async function (enteredPass) {
+    return await bcryptjs.compare(enteredPass, this.password);
+};
+
 const User = mongoose.model("User", UserSchema);
 
 module.exports = User;

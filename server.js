@@ -1,7 +1,10 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const errHandler = require('./middleware/errorHandler');
+const {
+    errorResponseHandler,
+    invalidPathHandler,
+} = require("./middleware/errorHandler");
 
 // Routes
 const userRoutes = require("./routes/userRoutes");
@@ -16,9 +19,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
-app.use(errHandler.invalidPathHandler);
-app.use(errHandler.errorResponseHandler);
-
+app.use(invalidPathHandler);
+app.use(errorResponseHandler);
 
 const PORT = process.env.PORT;
 

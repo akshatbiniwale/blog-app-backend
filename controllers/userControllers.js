@@ -8,7 +8,7 @@ const registerUser = async (req, res, next) => {
         // check if user already exists in the database
         let user = await User.findOne({ email });
         if (user) {
-            throw new Error("This user already exists!");
+            throw new Error("This user already exists.");
         }
         // creating a new user
         user = await User.create({
@@ -35,7 +35,7 @@ const loginUser = async (req, res, next) => {
         const { email, password } = req.body;
         let user = await User.findOne({ email });
         if (!user) {
-            throw new Error("Email not found!");
+            throw new Error("Email not found.");
         }
         if (await user.comparePassword(password)) {
             return res.status(201).json({
@@ -48,7 +48,7 @@ const loginUser = async (req, res, next) => {
                 token: await user.generateJWT(),
             });
         } else {
-            throw new Error("Invalid email or password!");
+            throw new Error("Invalid email or password.");
         }
     } catch (error) {
         next(error);
@@ -69,7 +69,7 @@ const userProfile = async (req, res, next) => {
                 token: await user.generateJWT(),
             });
         } else {
-            let error = new Error("User not found!");
+            let error = new Error("User not found.");
             error.statusCode = 404;
             next(error);
         }
@@ -112,7 +112,7 @@ const updateProfilePicture = async (req, res, next) => {
         upload(req, res, async function (err) {
             if (err) {
                 const error = new Error(
-                    "An unknown error occurred while uploading!" + err.message
+                    "An unknown error occurred while uploading." + err.message
                 );
                 next(error);
             } else {

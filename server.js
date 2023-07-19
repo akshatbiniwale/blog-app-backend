@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const path = require("path");
 const {
     errorResponseHandler,
     invalidPathHandler,
@@ -19,6 +20,10 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
+
+// static assets
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
 app.use(invalidPathHandler);
 app.use(errorResponseHandler);
 

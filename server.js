@@ -15,6 +15,8 @@ dotenv.config();
 connectDB();
 app.use(express.json());
 
+// Returns middleware that only parses json and only looks at requests where the Content-Type header matches the type option.
+
 app.get("/", (req, res) => {
     res.send("Server is running...");
 });

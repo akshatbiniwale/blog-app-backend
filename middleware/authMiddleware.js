@@ -1,6 +1,8 @@
 const jsonwebtoken = require("jsonwebtoken");
 const User = require("../models/User");
 
+// the bearer token and the type of the token is passed in the header requests
+
 const authGuard = async (req, res, next) => {
     if (
         req.headers.authorization &&
@@ -10,6 +12,9 @@ const authGuard = async (req, res, next) => {
             const token = req.headers.authorization.split(" ")[1];
             const { id } = jsonwebtoken.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(id).select("-password");
+            /*
+                the above code validates the token of the user and then changes the request to user which deselects the password field.
+            */
             next();
         } catch (error) {
             let err = new Error("Not authorized, Token failed!");
@@ -22,5 +27,7 @@ const authGuard = async (req, res, next) => {
         next(error);
     }
 };
+
+// next function is used to point to the next middleware in the stack until all the middleware's are cleared.
 
 module.exports = authGuard;

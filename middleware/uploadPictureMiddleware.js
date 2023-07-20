@@ -1,6 +1,8 @@
 const path = require("path");
 const multer = require("multer");
 
+// filename is used to set the unique filename in the format timeInSeconds-originalFileName
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, "../uploads"));

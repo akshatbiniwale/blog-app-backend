@@ -1,5 +1,6 @@
 const uploadPicture = require("../middleware/uploadPictureMiddleware");
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 const fileRemover = require("../utils/fileRemover");
 const { v4: uuidv4 } = require("uuid");
 
@@ -78,7 +79,24 @@ const updatePost = async (req, res, next) => {
     }
 };
 
+const deletePost = async (req, res, next) => {
+    try {
+        const post = await Post.findOneAndDelete({ slug: req.params.slug });
+
+        if (!post) {
+            const error = new Error("Post was not found");
+            return next();
+        }
+
+        const comments = await Comment.deleteMany({ post: post._id });
+        return res.json({ message: "Post is successfully deleted" });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     createPost,
     updatePost,
+    deletePost,
 };

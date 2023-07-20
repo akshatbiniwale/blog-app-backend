@@ -30,4 +30,14 @@ const authGuard = async (req, res, next) => {
 
 // next function is used to point to the next middleware in the stack until all the middleware's are cleared.
 
-module.exports = authGuard;
+const adminGuard = (req, res, next) => {
+    if (req.user && req.user.admin) {
+        next();
+    } else {
+        let error = new Error("Not authorized as an admin");
+        error.statusCode = 401;
+        next(error);
+    }
+};
+
+module.exports = { authGuard, adminGuard };

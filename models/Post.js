@@ -35,7 +35,7 @@ const PostSchema = new mongoose.Schema(
             { type: mongoose.Schema.Types.ObjectId, ref: "PostCategories" },
         ],
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals: true } }
 );
 
 PostSchema.virtual("comments", {

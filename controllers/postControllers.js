@@ -5,16 +5,18 @@ const fileRemover = require("../utils/fileRemover");
 const { v4: uuidv4 } = require("uuid");
 
 const createPost = async (req, res, next) => {
+    const { title, caption, body, photo } = req.body;
+
     try {
         const post = new Post({
-            title: "sample title",
-            caption: "sample caption",
+            title,
+            caption,
             slug: uuidv4(),
             body: {
-                type: "doc",
-                content: [],
+                type: body.type,
+                content: body.content,
             },
-            photo: "",
+            photo,
             user: req.user._id,
         });
 
@@ -95,8 +97,47 @@ const deletePost = async (req, res, next) => {
     }
 };
 
+const getPost = async (req, res, next) => {
+    try {
+        const post = await Post.findOne({ slug: req.params.slug }).populate([
+            {
+                path: "user",
+                select: ["name", "avatar"],
+            },
+            {
+                path: "comments",
+                match: {
+                    check: true,
+                    parent: null,
+                },
+                populate: [
+                    {
+                        path: "user",
+                        select: ["name", "avatar"],
+                    },
+                    {
+                        path: "replies",
+                        match: {
+                            check: true,
+                        },
+                    },
+                ],
+            },
+        ]);
+        if (!post) {
+            const error = new Error("Post was not found");
+            next(error);
+            return;
+        }
+        return res.json(post);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     createPost,
     updatePost,
     deletePost,
+    getPost,
 };

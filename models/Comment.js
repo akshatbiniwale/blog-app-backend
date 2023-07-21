@@ -31,13 +31,13 @@ const CommentSchema = new mongoose.Schema(
             default: null,
         },
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals: true } }
 );
 
 CommentSchema.virtual("replies", {
     ref: "Comment",
     localField: "_id",
-    foreignField: "postId",
+    foreignField: "parent",
 });
 
 const Comment = mongoose.model("Comment", CommentSchema);

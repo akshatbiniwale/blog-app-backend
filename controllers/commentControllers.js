@@ -44,10 +44,28 @@ const updateComment = async (req, res, next) => {
 
         const updatedComment = await comment.save();
         res.json(updatedComment);
-        res.json();
     } catch (error) {
         next(error);
     }
 };
 
-module.exports = { createComment, updateComment };
+const deleteComment = async (req, res, next) => {
+    try {
+        const comment = await Comment.findByIdAndDelete(req.params.commentId);
+        await Comment.deleteMany({ parent: comment._id });
+
+        if (!comment) {
+            const error = new Error("Comment was not found");
+            next(error);
+            return;
+        }
+
+        res.json({
+            message: "Comment deleted",
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { createComment, updateComment, deleteComment };

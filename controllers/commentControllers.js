@@ -28,4 +28,26 @@ const createComment = async (req, res, next) => {
     }
 };
 
-module.exports = { createComment };
+const updateComment = async (req, res, next) => {
+    try {
+        const { desc } = req.body;
+
+        const comment = await Comment.findById(req.params.commentId);
+
+        if (!comment) {
+            const error = new Error("Comment was not found");
+            next(error);
+            return;
+        }
+
+        comment.desc = desc || comment.desc;
+
+        const updatedComment = await comment.save();
+        res.json(updatedComment);
+        res.json();
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { createComment, updateComment };

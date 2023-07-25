@@ -148,6 +148,10 @@ const getAllPosts = async (req, res, next) => {
 
         if (filter) {
             where.title = { $regex: filter, $options: "i" };
+
+            // Provides regular expression capabilities for pattern matching strings in queries. MongoDB uses Perl compatible regular expressions
+
+            // i - Case insensitivity to match upper and lower cases.
         }
 
         let query = Post.find(where);
@@ -163,8 +167,8 @@ const getAllPosts = async (req, res, next) => {
         }
 
         const result = await query
-            .skip(skip)
-            .limit(pageSize)
+            .skip(skip) // Specifies the number of documents to skip.
+            .limit(pageSize) // Specifies the maximum number of documents the query will return.
             .populate([
                 {
                     path: "user",
@@ -180,6 +184,8 @@ const getAllPosts = async (req, res, next) => {
             "x-pagesize": JSON.stringify(pageSize),
             "x-totalpagecount": JSON.stringify(pages),
         });
+
+        // The headers in the code start with x- because they are custom headers. Custom headers are headers that are not defined by the HTTP specification. By convention, custom headers start with x- to distinguish them from standard headers.
 
         return res.json(result);
     } catch (error) {

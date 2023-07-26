@@ -141,17 +141,18 @@ const getPost = async (req, res, next) => {
     }
 };
 
+// Provides regular expression capabilities for pattern matching strings in queries. MongoDB uses Perl compatible regular expressions
+
 const getAllPosts = async (req, res, next) => {
     try {
         const filter = req.query.searchKeyword;
         let where = {};
 
+        // i - Case insensitivity to match upper and lower cases.
         if (filter) {
             where.title = { $regex: filter, $options: "i" };
 
-            // Provides regular expression capabilities for pattern matching strings in queries. MongoDB uses Perl compatible regular expressions
 
-            // i - Case insensitivity to match upper and lower cases.
         }
 
         let query = Post.find(where);

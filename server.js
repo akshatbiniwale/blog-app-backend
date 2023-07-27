@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const path = require("path");
+const cors = require("cors");
 const {
     errorResponseHandler,
     invalidPathHandler,
@@ -16,6 +17,7 @@ const app = express();
 dotenv.config();
 connectDB();
 app.use(express.json());
+app.use(cors());
 
 // Returns middleware that only parses json and only looks at requests where the Content-Type header matches the type option.
 

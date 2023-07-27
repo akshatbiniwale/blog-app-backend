@@ -5,7 +5,7 @@ const fileRemover = require("../utils/fileRemover");
 const { v4: uuidv4 } = require("uuid");
 
 const createPost = async (req, res, next) => {
-    const { title, caption, body, photo } = req.body;
+    const { title, caption, body, photo, tags } = req.body;
 
     try {
         const post = new Post({
@@ -17,6 +17,7 @@ const createPost = async (req, res, next) => {
                 content: body.content,
             },
             photo,
+            tags,
             user: req.user._id,
         });
 

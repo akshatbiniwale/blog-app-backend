@@ -141,30 +141,32 @@ const getPost = async (req, res, next) => {
     }
 };
 
-// Provides regular expression capabilities for pattern matching strings in queries. MongoDB uses Perl compatible regular expressions
-
 const getAllPosts = async (req, res, next) => {
     try {
         const filter = req.query.searchKeyword;
         let where = {};
-
-        // i - Case insensitivity to match upper and lower cases.
         if (filter) {
             where.title = { $regex: filter, $options: "i" };
-
-
+            // $regex: Provides regular expression capabilities for pattern matching strings in queries. MongoDB uses Perl compatible regular expressions
+            // $options: i - Case insensitivity to match upper and lower cases.
         }
-
         let query = Post.find(where);
         const page = parseInt(req.query.page) || 1;
         const pageSize = parseInt(req.query.limit) || 12;
         const skip = (page - 1) * pageSize;
-        const total = await Post.countDocuments();
+        const total = await Post.find(where).countDocuments();
         const pages = Math.ceil(total / pageSize);
 
+        res.header({
+            "x-filter": filter,
+            "x-totalcount": JSON.stringify(total),
+            "x-currentpage": JSON.stringify(page),
+            "x-pagesize": JSON.stringify(pageSize),
+            "x-totalpagecount": JSON.stringify(pages),
+        });
+
         if (page > pages) {
-            const error = new Error("No page found");
-            next(error);
+            return res.json([]);
         }
 
         const result = await query
@@ -177,14 +179,6 @@ const getAllPosts = async (req, res, next) => {
                 },
             ])
             .sort({ updatedAt: "desc" });
-
-        res.header({
-            "x-filter": filter,
-            "x-totalcount": JSON.stringify(total),
-            "x-current": JSON.stringify(page),
-            "x-pagesize": JSON.stringify(pageSize),
-            "x-totalpagecount": JSON.stringify(pages),
-        });
 
         // The headers in the code start with x- because they are custom headers. Custom headers are headers that are not defined by the HTTP specification. By convention, custom headers start with x- to distinguish them from standard headers.
 

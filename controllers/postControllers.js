@@ -5,24 +5,46 @@ const fileRemover = require("../utils/fileRemover");
 const { v4: uuidv4 } = require("uuid");
 
 const createPost = async (req, res, next) => {
-    const { title, caption, body, photo, tags } = req.body;
-
     try {
-        const post = new Post({
-            title,
-            caption,
-            slug: uuidv4(),
-            body: {
-                type: body.type,
-                content: body.content,
-            },
-            photo,
-            tags,
-            user: req.user._id,
+        const upload = uploadPicture.single("postPicture");
+
+        const handleUpdatePostData = async (data, photo) => {
+            const { title, caption, body, tags = [] } = JSON.parse(data);
+
+            const post = new Post({
+                title,
+                caption,
+                slug: uuidv4(),
+                body: {
+                    type: body.type,
+                    content: body.content,
+                },
+                photo,
+                tags,
+                user: req.user._id,
+            });
+
+            const createdPost = await post.save();
+            return res.json(createdPost);
+        };
+
+        upload(req, res, async function (err) {
+            if (err) {
+                const error = new Error(
+                    "An unknown error occurred while uploading." + err.message
+                );
+                next(error);
+            } else {
+                let filename;
+                if (req.file) {
+                    filename = req.file.filename;
+                } else {
+                    filename = "";
+                }
+                handleUpdatePostData(req.body.document, filename);
+            }
         });
 
-        const createdPost = await post.save();
-        return res.json(createdPost);
     } catch (error) {
         next(error);
     }

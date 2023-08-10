@@ -9,7 +9,7 @@ const createPost = async (req, res, next) => {
         const upload = uploadPicture.single("postPicture");
 
         const handleUpdatePostData = async (data, photo) => {
-            const { title, caption, body, tags = [] } = JSON.parse(data);
+            const { title, caption, body = null, tags = [] } = JSON.parse(data);
 
             const post = new Post({
                 title,
@@ -44,7 +44,6 @@ const createPost = async (req, res, next) => {
                 handleUpdatePostData(req.body.document, filename);
             }
         });
-
     } catch (error) {
         next(error);
     }
@@ -164,10 +163,12 @@ const getPost = async (req, res, next) => {
     }
 };
 
-const getAllPosts = async (req, res, next) => {
+const getAllPostsOfUser = async (req, res, next) => {
     try {
         const filter = req.query.searchKeyword;
-        let where = {};
+        let where = {
+            user: req.user._id,
+        };
         if (filter) {
             where.title = { $regex: filter, $options: "i" };
             // $regex: Provides regular expression capabilities for pattern matching strings in queries. MongoDB uses Perl compatible regular expressions
@@ -211,10 +212,28 @@ const getAllPosts = async (req, res, next) => {
     }
 };
 
+const getAllPosts = async (req, res, next) => {
+    try {
+        const result = await Post.find()
+            .populate([
+                {
+                    path: "user",
+                    select: ["avatar", "name", "verified"],
+                },
+            ])
+            .sort({ updatedAt: "desc" });
+
+        return res.json(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     createPost,
     updatePost,
     deletePost,
     getPost,
     getAllPosts,
+    getAllPostsOfUser,
 };

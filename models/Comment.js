@@ -18,7 +18,7 @@ const CommentSchema = new mongoose.Schema(
         },
         check: {
             type: Boolean,
-            default: false,
+            default: true,
         },
         parent: {
             type: mongoose.Schema.Types.ObjectId,

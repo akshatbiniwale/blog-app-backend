@@ -7,9 +7,15 @@ const {
     deletePost,
     getPost,
     getAllPosts,
+    getAllPostsOfUser,
 } = require("../controllers/postControllers");
 
-router.route("/").post(authGuard, adminGuard, createPost).get(getAllPosts);
+router
+    .route("/")
+    .post(authGuard, adminGuard, createPost)
+    .get(getAllPosts);
+
+router.route("/manage").get(authGuard, getAllPostsOfUser);
 
 router
     .route("/:slug")

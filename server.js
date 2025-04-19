@@ -12,6 +12,7 @@ const {
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
+const postCategoriesRoutes = require("./routes/postCategoriesRoutes");
 
 const app = express();
 dotenv.config();
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/post-categories", postCategoriesRoutes);
 
 // static assets
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));

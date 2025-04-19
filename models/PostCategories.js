@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const PostCategoriesSchema = new mongoose.Schema(
     {
-        name: {
+        title: {
             type: String,
             required: true,
         },

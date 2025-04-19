@@ -1,12 +1,12 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+const {
 	createPostCategory,
 	deletePostCategory,
 	getAllPostCategories,
 	updatePostCategory,
-} from "../controllers/postCategoriesController";
-import { adminGuard, authGuard } from "../middleware/authMiddleware";
+} = require("../controllers/postCategoriesController");
+const { adminGuard, authGuard } = require("../middleware/authMiddleware");
 
 router
 	.route("/")
@@ -18,4 +18,4 @@ router
 	.put(authGuard, adminGuard, updatePostCategory)
 	.delete(authGuard, adminGuard, deletePostCategory);
 
-export default router;
+module.exports = router;

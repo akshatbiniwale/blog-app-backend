@@ -257,7 +257,6 @@ const getAllPosts = async (req, res, next) => {
 			])
 			.sort({ updatedAt: "desc" });
         
-        console.log(result);
 		return res.json(result);
 	} catch (error) {
 		next(error);

@@ -9,7 +9,7 @@ const createPost = async (req, res, next) => {
 		const upload = uploadPicture.single("postPicture");
 
 		const handleUpdatePostData = async (data, base64Image) => {
-			const { title, caption, body = null, tags = [] } = JSON.parse(data);
+			const { title, caption, body = null, tags = [], categories = [] } = JSON.parse(data);
 
 			const post = new Post({
 				title,
@@ -22,6 +22,7 @@ const createPost = async (req, res, next) => {
 				photo: base64Image, // Now storing base64 string
 				tags,
 				user: req.user._id,
+				categories,
 			});
 
 			const createdPost = await post.save();
@@ -126,36 +127,40 @@ const deletePost = async (req, res, next) => {
 const getPost = async (req, res, next) => {
     try {
         const post = await Post.findOne({ slug: req.params.slug }).populate([
-            {
-                path: "user",
-                select: ["name", "avatar"],
-            },
-            {
-                path: "comments",
-                match: {
-                    check: true,
-                    parent: null,
-                },
-                populate: [
-                    {
-                        path: "user",
-                        select: ["name", "avatar"],
-                    },
-                    {
-                        path: "replies",
-                        match: {
-                            check: true,
-                        },
-                        populate: [
-                            {
-                                path: "user",
-                                select: ["name", "avatar"],
-                            },
-                        ],
-                    },
-                ],
-            },
-        ]);
+			{
+				path: "user",
+				select: ["name", "avatar"],
+			},
+			{
+				path: "comments",
+				match: {
+					check: true,
+					parent: null,
+				},
+				populate: [
+					{
+						path: "user",
+						select: ["name", "avatar"],
+					},
+					{
+						path: "replies",
+						match: {
+							check: true,
+						},
+						populate: [
+							{
+								path: "user",
+								select: ["name", "avatar"],
+							},
+						],
+					},
+				],
+			},
+			{
+				path: "categories",
+				select: ["title"],
+			},
+		]);
         if (!post) {
             const error = new Error("Post was not found");
             next(error);

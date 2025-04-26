@@ -9,8 +9,10 @@ const {
 } = require("../controllers/commentControllers");
 
 router
-    .post("/", authGuard, createComment)
+    .route("/")
+    .post(authGuard, createComment)
     .get(authGuard, adminGuard, getAllComments);
+
 router
     .route("/:commentId")
     .put(authGuard, updateComment)

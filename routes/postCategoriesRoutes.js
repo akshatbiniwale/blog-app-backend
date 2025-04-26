@@ -5,6 +5,7 @@ const {
 	deletePostCategory,
 	getAllPostCategories,
 	updatePostCategory,
+	getSingleCategory,
 } = require("../controllers/postCategoriesController");
 const { adminGuard, authGuard } = require("../middleware/authMiddleware");
 
@@ -15,6 +16,7 @@ router
 
 router
 	.route("/:postCategoryId")
+	.get(getSingleCategory)
 	.put(authGuard, adminGuard, updatePostCategory)
 	.delete(authGuard, adminGuard, deletePostCategory);
 

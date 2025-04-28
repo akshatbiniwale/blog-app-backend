@@ -175,6 +175,6 @@ gitignore/Node.gitignore at main · github/gitignore.DS_Store
 node_modules
 
 # personal paths
-
+./node_modules/
 ./backend/node_modules/
 ./fronend/node_modules/

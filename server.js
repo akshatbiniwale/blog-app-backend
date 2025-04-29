@@ -20,7 +20,12 @@ connectDB();
 app.use(express.json());
 
 // Corrected CORS configuration
-app.use(cors({ origin: "https://strings-frontend.vercel.app" }));
+app.use(
+	cors({
+		origin: "https://strings-frontend.vercel.app",
+		exposedHeaders: "*",
+	})
+);
 
 // Returns middleware that only parses json and only looks at requests where the Content-Type header matches the type option.
 

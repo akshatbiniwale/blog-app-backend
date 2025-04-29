@@ -22,7 +22,7 @@ app.use(express.json());
 // Corrected CORS configuration
 app.use(
 	cors({
-		origin: "https://blogstrings.vercel.app/",
+		origin: "https://blogstrings.vercel.app",
 		exposedHeaders: "*",
 	})
 );

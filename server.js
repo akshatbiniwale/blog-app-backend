@@ -4,8 +4,8 @@ const connectDB = require("./config/db");
 const path = require("path");
 const cors = require("cors");
 const {
-    errorResponseHandler,
-    invalidPathHandler,
+	errorResponseHandler,
+	invalidPathHandler,
 } = require("./middleware/errorHandler");
 
 // Routes
@@ -18,12 +18,14 @@ const app = express();
 dotenv.config();
 connectDB();
 app.use(express.json());
-app.use(cors({ origin: "https://strings-frontend.vercel.app/" }));
+
+// Corrected CORS configuration
+app.use(cors({ origin: "https://strings-frontend.vercel.app" }));
 
 // Returns middleware that only parses json and only looks at requests where the Content-Type header matches the type option.
 
 app.get("/", (req, res) => {
-    res.send("Server is running...");
+	res.send("Server is running...");
 });
 
 app.use("/api/users", userRoutes);
@@ -40,5 +42,5 @@ app.use(errorResponseHandler);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log("Server is up and listening on port " + PORT);
+	console.log("Server is up and listening on port " + PORT);
 });
